@@ -1,42 +1,45 @@
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include <stb_image_write.h>
-#include <vector>
+#include "Canvas.hpp"
+#include "Camera.hpp"
 #include <iostream>
 
-void export_rgba_matrix_as_image(const std::vector<unsigned char>& rgba_matrix, int width, int height, const std::string& file_name) {
-    // Check if the matrix size matches the width * height * 4 (RGBA)
-    if (rgba_matrix.size() != width * height * 4) {
-        std::cerr << "Invalid RGBA matrix size. Expected " << width * height * 4 << " but got " << rgba_matrix.size() << std::endl;
-        return;
-    }
-
-    // Save the image as a PNG file
-    if (stbi_write_png(file_name.c_str(), width, height, 4, rgba_matrix.data(), width * 4)) {
-        std::cout << "Image saved successfully to " << file_name << std::endl;
-    } else {
-        std::cerr << "Failed to save the image!" << std::endl;
-    }
+std::ostream& operator<<(std::ostream& os, const glm::vec3& vec) {
+    os << "vec3(" << vec.x << ", " << vec.y << ", " << vec.z << ")";
+    return os;
 }
 
 int main() {
-    // Example usage
+    // Create a canvas with dimensions 256x256
+    Canvas canvas(256, 256);
 
-    // Define image dimensions
-    int width = 256;
-    int height = 256;
+    // Set some pixels to different colors
+    canvas.setPixel(50, 50, 255, 0, 0, 255);   // Red
+    canvas.setPixel(100, 100, 0, 255, 0, 255); // Green
+    canvas.setPixel(150, 150, 0, 0, 255, 255); // Blue
 
-    // Create a simple RGBA matrix (solid red color)
-    std::vector<unsigned char> rgba_matrix(width * height * 4);
+    // Export the canvas to a PNG file
+    canvas.exportImage("output_canvas.png");
 
-    for (int i = 0; i < width * height; ++i) {
-        rgba_matrix[i * 4 + 0] = 255; // R
-        rgba_matrix[i * 4 + 1] = 0;   // G
-        rgba_matrix[i * 4 + 2] = 0;   // B
-        rgba_matrix[i * 4 + 3] = 255; // A
-    }
+    Ray cameraRay(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)); // Camera facing +Z
+    float tiltAngle = 15.0f;                // Example tilt angle 15
+    float width = 16.0f;                    // Viewport width
+    float height = 9.0f;                    // Viewport height
+    float distance = 10.0f;                 // Distance to the viewport
 
-    // Export the RGBA matrix as a PNG image
-    export_rgba_matrix_as_image(rgba_matrix, width, height, "output_image.png");
+    Camera camera(cameraRay, tiltAngle, width, height, distance);
+
+    // Access the right and up vectors
+    glm::vec3 right = camera.getRight();
+    glm::vec3 up = camera.getUp();
+    glm::vec3 front = camera.getFront();
+
+
+    std::cout <<"Front vector ="<<front<<std::endl;
+    std::cout <<"Right vector ="<<right<<std::endl;
+    std::cout <<"Up vector ="<<up<<std::endl;
+
+    std::cout<<glm::dot(right,up)<<std::endl;
+    std::cout<<glm::dot(right,front)<<std::endl;
+    std::cout<<glm::dot(up,front)<<std::endl;
 
     return 0;
 }
