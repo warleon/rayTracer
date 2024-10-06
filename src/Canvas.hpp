@@ -3,6 +3,8 @@
 #include <vector>
 #include <string>
 #include <glm/glm.hpp>
+#include "Color.hpp"
+
 
 class Canvas {
 public:
@@ -10,7 +12,7 @@ public:
     Canvas(int width, int height);
 
     // Function to update a pixel at (x, y) with an RGBA value
-    void setPixel(int x, int y, unsigned char r, unsigned char g, unsigned char b, unsigned char a);
+    void setPixel(int x, int y, color_t color);
 
     // Function to export the canvas as an image file
     void exportImage(const std::string& fileName) const;

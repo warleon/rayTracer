@@ -8,16 +8,16 @@ Canvas::Canvas(int width, int height) : width(width), height(height), rgbaMatrix
     // Initialize the matrix with default values (white and fully opaque)
 }
 
-void Canvas::setPixel(int x, int y, unsigned char r, unsigned char g, unsigned char b, unsigned char a) {
+void Canvas::setPixel(int x, int y,color_t pixel) {
     if (x < 0 || x >= width || y < 0 || y >= height) {
         throw std::out_of_range("Pixel coordinates out of bounds.");
     }
     
     int index = getIndex(x, y);
-    rgbaMatrix[index]     = r; // Red
-    rgbaMatrix[index + 1] = g; // Green
-    rgbaMatrix[index + 2] = b; // Blue
-    rgbaMatrix[index + 3] = a; // Alpha
+    rgbaMatrix[index]     = pixel.r; // Red
+    rgbaMatrix[index + 1] = pixel.g; // Green
+    rgbaMatrix[index + 2] = pixel.b; // Blue
+    rgbaMatrix[index + 3] = pixel.a; // Alpha
 }
 
 void Canvas::exportImage(const std::string& fileName) const {
@@ -34,7 +34,8 @@ int Canvas::getIndex(int x, int y) const {
 
 glm::vec2 Canvas::getNormalizedCoordinates(int x, int y) const {
         // Transform pixel coordinates to normalized coordinates
-        float normalizedX = (x - (width / 2.0f)) / (width / 2.0f);
-        float normalizedY = ((height / 2.0f) - y) / (height / 2.0f);
+        float hw = (width / 2.0f),hh=(height / 2.0f);
+        float normalizedX = (x - hw) / hw;
+        float normalizedY = (hh - y) / hh;
         return glm::vec2(normalizedX, normalizedY);
     }

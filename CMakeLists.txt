@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.30)
 project(rayTracer CXX)
 
 # Specify the C++ standard
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_BINARY_DIR})
@@ -43,3 +43,9 @@ target_link_libraries(rayTracer PRIVATE stb_image_write)
 target_link_libraries(rayTracer PRIVATE glm)
 
 install(TARGETS rayTracer DESTINATION dist)
+
+# Copy 'data' directory to the build directory
+file(COPY ${CMAKE_SOURCE_DIR}/data DESTINATION ${CMAKE_BINARY_DIR})
+
+# Add the 'data' directory to the installation
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/data DESTINATION ${CMAKE_INSTALL_PREFIX}/data)

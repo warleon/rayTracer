@@ -1,5 +1,8 @@
 #include "Canvas.hpp"
 #include "Camera.hpp"
+#include "Sphere.hpp"
+#include "Renderer.hpp"
+#include "OBJLoader.hpp"
 #include <iostream>
 
 std::ostream& operator<<(std::ostream& os, const glm::vec2& vec) {
@@ -13,21 +16,13 @@ std::ostream& operator<<(std::ostream& os, const glm::vec3& vec) {
 
 int main() {
     // Create a canvas with dimensions 256x256
-    Canvas canvas(256, 256);
+    Canvas canvas(64, 64);
 
-    // Set some pixels to different colors
-    canvas.setPixel(50, 50, 255, 0, 0, 255);   // Red
-    canvas.setPixel(100, 100, 0, 255, 0, 255); // Green
-    canvas.setPixel(150, 150, 0, 0, 255, 255); // Blue
-
-    // Export the canvas to a PNG file
-    canvas.exportImage("output_canvas.png");
-
-    Ray cameraRay(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)); // Camera facing +Z
-    float tiltAngle = 90.0f;                // Example tilt angle 15
-    float width = 16.0f;                    // Viewport width
-    float height = 9.0f;                    // Viewport height
-    float distance = 10.0f;                 // Distance to the viewport
+    Ray cameraRay(glm::vec3(-0.02f, 0.11f, -0.5f), glm::vec3(0.0f, 0.0f, 1.0f)); // Camera facing +Z
+    float tiltAngle = 15.0f ;                // Example tilt angle 15
+    float width = 0.15f;                    // Viewport width
+    float height = 0.15f;                    // Viewport height
+    float distance = 0.4f;                 // Distance to the viewport
 
     Camera camera(cameraRay, tiltAngle, width, height, distance);
 
@@ -43,15 +38,18 @@ int main() {
     std::cout <<"Right vector ="<<right<<std::endl;
     std::cout <<"Up vector ="<<up<<std::endl;
 
-    std::cout<<glm::dot(right,up)<<std::endl;
-    std::cout<<glm::dot(right,front)<<std::endl;
-    std::cout<<glm::dot(up,front)<<std::endl;
+    Sphere sphere(color_t(0,0,255,255),glm::vec3(0,0,5),1);
+    Renderer renderer(canvas,camera);
+    OBJLoader loader;
+    renderer.addObject(&sphere);
 
+    //std::cout <<"loading objects into the renderer"<<std::endl;
+    //loader.load("data/bunny.obj",color_t(255,255,255,255),renderer.getObjects());
+    //std::cout <<"LOADED:"<<renderer.getObjects().size()<<std::endl;
+    std::cout <<"Rendering scene"<<std::endl;
+    renderer.render();
 
-    std::cout <<"Canvas normalized coordinates ="<<norm<<std::endl;
-    std::cout <<"Ray  =["<<ray.getOrigin()<<","<<ray.getDirection()<<"]"<<std::endl;
-
-
-
+    // Export the canvas to a PNG file
+    renderer.getCanvas().exportImage("output_canvas.png");
     return 0;
 }
