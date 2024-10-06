@@ -62,7 +62,7 @@ Ray Camera::getRayForViewportCoordinates(float x, float y) const {
     glm::vec3 viewportCenter = origin + (ray.getDirection() * distance);
 
     // Calculate target position in the viewport
-    glm::vec3 target = viewportCenter + right * x + up * y;
+    glm::vec3 target = viewportCenter + right * (x * width/2) + up * (y * height/2);
     glm::vec3 direction = glm::normalize(target - origin);
 
     return Ray(origin, direction);

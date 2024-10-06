@@ -2,6 +2,10 @@
 #include "Camera.hpp"
 #include <iostream>
 
+std::ostream& operator<<(std::ostream& os, const glm::vec2& vec) {
+    os << "vec2(" << vec.x << ", " << vec.y << ")";
+    return os;
+}
 std::ostream& operator<<(std::ostream& os, const glm::vec3& vec) {
     os << "vec3(" << vec.x << ", " << vec.y << ", " << vec.z << ")";
     return os;
@@ -20,7 +24,7 @@ int main() {
     canvas.exportImage("output_canvas.png");
 
     Ray cameraRay(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)); // Camera facing +Z
-    float tiltAngle = 15.0f;                // Example tilt angle 15
+    float tiltAngle = 90.0f;                // Example tilt angle 15
     float width = 16.0f;                    // Viewport width
     float height = 9.0f;                    // Viewport height
     float distance = 10.0f;                 // Distance to the viewport
@@ -32,6 +36,8 @@ int main() {
     glm::vec3 up = camera.getUp();
     glm::vec3 front = camera.getFront();
 
+    glm::vec2 norm = canvas.getNormalizedCoordinates(0,0);
+    Ray ray = camera.getRayForViewportCoordinates(norm.x,norm.y);
 
     std::cout <<"Front vector ="<<front<<std::endl;
     std::cout <<"Right vector ="<<right<<std::endl;
@@ -40,6 +46,12 @@ int main() {
     std::cout<<glm::dot(right,up)<<std::endl;
     std::cout<<glm::dot(right,front)<<std::endl;
     std::cout<<glm::dot(up,front)<<std::endl;
+
+
+    std::cout <<"Canvas normalized coordinates ="<<norm<<std::endl;
+    std::cout <<"Ray  =["<<ray.getOrigin()<<","<<ray.getDirection()<<"]"<<std::endl;
+
+
 
     return 0;
 }

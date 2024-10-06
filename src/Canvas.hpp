@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+#include <glm/glm.hpp>
 
 class Canvas {
 public:
@@ -17,6 +18,8 @@ public:
     // Getters for width and height
     int getWidth() const { return width; }
     int getHeight() const { return height; }
+
+   glm::vec2 getNormalizedCoordinates(int x, int y) const;
 
 private:
     int width;

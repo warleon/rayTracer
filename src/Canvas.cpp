@@ -31,3 +31,10 @@ void Canvas::exportImage(const std::string& fileName) const {
 int Canvas::getIndex(int x, int y) const {
     return (y * width + x) * 4; // Each pixel has 4 components (RGBA)
 }
+
+glm::vec2 Canvas::getNormalizedCoordinates(int x, int y) const {
+        // Transform pixel coordinates to normalized coordinates
+        float normalizedX = (x - (width / 2.0f)) / (width / 2.0f);
+        float normalizedY = ((height / 2.0f) - y) / (height / 2.0f);
+        return glm::vec2(normalizedX, normalizedY);
+    }
