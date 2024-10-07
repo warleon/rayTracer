@@ -6,6 +6,7 @@ class Ray {
 public:
     // Constructor to initialize the Ray with an origin point and a direction vector
     Ray(const glm::vec3& origin, const glm::vec3& direction);
+    Ray();
 
     // Setters
     void setOrigin(const glm::vec3& origin);

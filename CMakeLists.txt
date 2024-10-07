@@ -30,7 +30,7 @@ add_definitions(-DGLM_ENABLE_EXPERIMENTAL)
 
 
 # Automatically find all .cpp files in the src directory
-file(GLOB_RECURSE SOURCES "src/**.cpp")
+file(GLOB_RECURSE SOURCES "src/**.[ic]pp")
 
 # Add the executable
 add_executable(rayTracer ${SOURCES})

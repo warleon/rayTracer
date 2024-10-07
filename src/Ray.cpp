@@ -3,6 +3,10 @@
 Ray::Ray(const glm::vec3& origin, const glm::vec3& direction)
     : origin(origin), direction(glm::normalize(direction)) {}
 
+Ray::Ray()
+: origin(0.0f), direction(0.0f) {}
+
+
 void Ray::setOrigin(const glm::vec3& origin) {
     this->origin = origin;
 }

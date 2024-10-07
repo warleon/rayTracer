@@ -1,5 +1,6 @@
 #include "OBJLoader.hpp"
-void OBJLoader::load(const std::string& filename, const color_t& color, Scene& scene) {
+#include <utility>
+void OBJLoader::load(const std::string& filename, Mesh& mesh) {
     std::vector<glm::vec3> vertices;
     
 
@@ -9,6 +10,7 @@ void OBJLoader::load(const std::string& filename, const color_t& color, Scene& s
     }
 
     std::string line;
+    std::vector<Triangle> result;
     while (std::getline(file, line)) {
         std::istringstream iss(line);
         std::string prefix;
@@ -32,10 +34,10 @@ void OBJLoader::load(const std::string& filename, const color_t& color, Scene& s
             // Create triangles from the face vertices
             if (faceVertices.size() >= 3) {
                 for (size_t i = 1; i < faceVertices.size() - 1; ++i) {
-                    scene.addObject(new Triangle(color,faceVertices[0], faceVertices[i], faceVertices[i + 1]));
+                    result.emplace_back(color,faceVertices[0], faceVertices[i], faceVertices[i + 1]);
                 }
             }
         }
     }
-
+    mesh.setTriangles(std::move(result));
 }

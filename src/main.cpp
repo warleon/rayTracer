@@ -38,19 +38,20 @@ int main() {
     Scene scene;
     Renderer renderer(canvas,camera,scene);
     OBJLoader loader;
-    AmbientLight alight(glm::vec3(0.6f,0.6f,0.8f));
-    DirectionalLight dlight(glm::vec3(1.0f,0.5f,0.6f),glm::vec3(-1.0f,-1.0f,1.0f));
-    PointLight plight(glm::vec3(0.8f,0.4f,1.0f),cameraRay.getOrigin() + glm::vec3(0.0f,0.4f,0.0f));
+    AmbientLight alight(glm::vec3(0.0f,0.2f,0.0f));
+    DirectionalLight dlight(glm::vec3(1.0f,0.0f,0.0f),glm::vec3(-1.0f,-1.0f,1.0f));
+    PointLight plight(glm::vec3(0.0f,0.0f,1.0f),cameraRay.getOrigin() + glm::vec3(0.0f,0.4f,0.0f));
     renderer.getScene().addLight(&alight);
     renderer.getScene().addLight(&dlight);
     renderer.getScene().addLight(&plight);
 
     //Sphere sphere(color_t(0,0,255,255),glm::vec3(0,0,5),1);
     //renderer.getScene().addObject(&sphere);
-
+    Mesh mesh(material_t(color_t(255,255,255,255)));
     std::cout <<"loading objects into the renderer"<<std::endl;
-    loader.load("data/bunny.obj",color_t(255,255,255,255),renderer.getScene());
-    std::cout <<"LOADED:"<<renderer.getScene().getObjects().size()<<std::endl;
+    loader.load("data/bunny.obj",mesh);
+    std::cout <<"LOADED:"<<mesh.getTriangles().size()<<std::endl;
+    renderer.getScene().addObject(&mesh);
     std::cout <<"Rendering scene"<<std::endl;
     renderer.render();
 
