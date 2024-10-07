@@ -20,7 +20,7 @@ public:
     void initialize();
     glm::ivec3 getNextCellAlongRay();
 
-    GridCellIterator<T>& operator++();
+    GridCellIterator<T>& operator++(int);
     std::vector<T>& operator*();
     std::vector<T>* operator->();
     bool operator!=(const GridCellIterator<T>& other) const;

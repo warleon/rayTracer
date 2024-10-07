@@ -22,6 +22,7 @@ void GridCellIterator<T>::initialize() {
 template<typename T>
 glm::ivec3 GridCellIterator<T>::getNextCellAlongRay() {
     // Initialize variables for ray traversal along the grid
+    glm::vec3 origin = ray.getOrigin();
     glm::vec3 rayDirection = ray.getDirection();
     glm::vec3 cellSize = grid->getCellSize();  // Assuming you have a method that gives the grid cell size
     glm::ivec3 nextCell = currentCell;
@@ -32,10 +33,10 @@ glm::ivec3 GridCellIterator<T>::getNextCellAlongRay() {
     for (int i = 0; i < 3; i++) {
         // Calculate the step direction for each axis
         if (rayDirection[i] > 0) {
-            tMax[i] = ((nextCell[i] + 1) * cellSize[i] - ray.origin[i]) / rayDirection[i];
+            tMax[i] = ((nextCell[i] + 1) * cellSize[i] - origin[i]) / rayDirection[i];
             //tDelta[i] = cellSize[i] / rayDirection[i];
         } else if (rayDirection[i] < 0) {
-            tMax[i] = (nextCell[i] * cellSize[i] - ray.origin[i]) / rayDirection[i];
+            tMax[i] = (nextCell[i] * cellSize[i] - origin[i]) / rayDirection[i];
             //tDelta[i] = cellSize[i] / -rayDirection[i];
         } else {
             tMax[i] = std::numeric_limits<float>::max();  // Ray is parallel to this axis
@@ -57,7 +58,7 @@ glm::ivec3 GridCellIterator<T>::getNextCellAlongRay() {
 
 // Increment to the next cell based on the ray's direction
 template<typename T>
-GridCellIterator<T>& GridCellIterator<T>::operator++() {
+GridCellIterator<T>& GridCellIterator<T>::operator++(int) {
     if(!grid)return *this;
     auto next = getNextCellAlongRay();
     if(grid->isInside(next))
@@ -69,12 +70,12 @@ GridCellIterator<T>& GridCellIterator<T>::operator++() {
 
 template<typename T>
 std::vector<T>& GridCellIterator<T>::operator*(){
-    return grid->operator[](currentCell);
+    return grid->operator()(currentCell);
 }
 
 template<typename T>
 std::vector<T>* GridCellIterator<T>::operator->(){
-    return &(grid->operator[](currentCell));
+    return &(grid->operator()(currentCell));
 }
 
 // Comparison operators for iterator (used in range-based loops)

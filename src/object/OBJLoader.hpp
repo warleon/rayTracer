@@ -9,5 +9,5 @@
 
 class OBJLoader {
 public:
-    void load(const std::string& filename, Mesh& mesh);
+    void load(const std::string& filename, Mesh* mesh);
 };

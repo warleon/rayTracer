@@ -49,7 +49,7 @@ int main() {
     //renderer.getScene().addObject(&sphere);
     Mesh mesh(material_t(color_t(255,255,255,255)));
     std::cout <<"loading objects into the renderer"<<std::endl;
-    loader.load("data/bunny.obj",mesh);
+    loader.load("data/bunny.obj",&mesh);
     std::cout <<"LOADED:"<<mesh.getTriangles().size()<<std::endl;
     renderer.getScene().addObject(&mesh);
     std::cout <<"Rendering scene"<<std::endl;

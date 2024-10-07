@@ -1,20 +1,25 @@
 #pragma once
-#include <glm/glm.hpp>
-#include <optional>
-#include <cmath>
+#include <Ray.hpp>
 #include <array>
+#include <cmath>
+#include <glm/glm.hpp>
+#include <iostream>
+#include <optional>
 
 class BareTriangle {
-    glm::vec3 vertex0; // First vertex of the triangle
-    glm::vec3 vertex1; // Second vertex of the triangle
-    glm::vec3 vertex2; // Third vertex of the triangle
-    glm::vec3 normal; // normal of the triangle
-public:
-    BareTriangle(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2);
+  std::array<glm::vec3, 3> vertices;
+  glm::vec3 normal;  // normal of the triangle
+ public:
+  BareTriangle(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2);
+  // BareTriangle(const BareTriangle& triangle);
+  ~BareTriangle() {
+    static long long count = 0;
+    std::cout << "DELETING BARE TRIANGLE " << count++ << std::endl;
+  }
 
-    std::optional<float> testRayHit(const Ray& ray) const;
+  std::optional<float> testRayHit(const Ray& ray) const;
 
-    glm::vec3 getNormalAt(const glm::vec3& point) const;
+  glm::vec3 getNormalAt(const glm::vec3& point) const;
 
-    std::array<glm::vec3*,3> vertices={&vertex0,&vertex1,&vertex2};
+  std::array<glm::vec3, 3>& getVertices();
 };
