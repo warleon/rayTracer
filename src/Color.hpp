@@ -1,4 +1,6 @@
 #pragma once
+#include <glm/glm.hpp>
+#include <algorithm>
 typedef struct Color{
     unsigned char r; // Red component
     unsigned char g; // Green component
@@ -12,5 +14,13 @@ typedef struct Color{
     Color(const Color& other)
         : r(other.r), g(other.g), b(other.b), a(other.a) {}
 
+    Color operator*(glm::vec3 intensity){
+        return Color(
+           std::clamp(int(r *intensity.x),0,255),
+           std::clamp(int(g *intensity.y),0,255),
+           std::clamp(int(b *intensity.z),0,255),
+           a
+        );
+    }
 
 }color_t;

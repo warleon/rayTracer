@@ -1,6 +1,6 @@
 #include "Sphere.hpp"
-Sphere::Sphere(const color_t& color, const glm::vec3& center, float radius)
-    : Object(color), center(center), radius(radius) {}
+Sphere::Sphere(const material_t& mat, const glm::vec3& center, float radius)
+    : Object(mat), center(center), radius(radius) {}
 
 std::optional<float> Sphere::testRayHit(const Ray& ray) const  {
     // Implement ray-sphere intersection logic
@@ -17,4 +17,9 @@ std::optional<float> Sphere::testRayHit(const Ray& ray) const  {
     } else {
         return (-b - glm::sqrt(discriminant)) / (2.0f * a); // Return distance to hit point
     }
+}
+
+// Get the normal vector at a point on the sphere surface
+glm::vec3 Sphere::getNormalAt(const glm::vec3& point) const {
+    return glm::normalize(point - center);  // Normalized vector from center to the point
 }

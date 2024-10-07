@@ -1,8 +1,9 @@
-#include "Canvas.hpp"
-#include "Camera.hpp"
-#include "Sphere.hpp"
-#include "Renderer.hpp"
-#include "OBJLoader.hpp"
+#include <Canvas.hpp>
+#include <Camera.hpp>
+#include <object/primitives.hpp>
+#include <Renderer.hpp>
+#include <object/OBJLoader.hpp>
+#include <light/primitives.hpp>
 #include <iostream>
 
 std::ostream& operator<<(std::ostream& os, const glm::vec2& vec) {
@@ -19,7 +20,7 @@ int main() {
     Canvas canvas(64, 64);
 
     Ray cameraRay(glm::vec3(-0.02f, 0.11f, -0.5f), glm::vec3(0.0f, 0.0f, 1.0f)); // Camera facing +Z
-    float tiltAngle = 15.0f ;                // Example tilt angle 15
+    float tiltAngle = 0.0f ;                // Example tilt angle 15
     float width = 0.15f;                    // Viewport width
     float height = 0.15f;                    // Viewport height
     float distance = 0.4f;                 // Distance to the viewport
@@ -34,18 +35,22 @@ int main() {
     glm::vec2 norm = canvas.getNormalizedCoordinates(0,0);
     Ray ray = camera.getRayForViewportCoordinates(norm.x,norm.y);
 
-    std::cout <<"Front vector ="<<front<<std::endl;
-    std::cout <<"Right vector ="<<right<<std::endl;
-    std::cout <<"Up vector ="<<up<<std::endl;
-
-    Sphere sphere(color_t(0,0,255,255),glm::vec3(0,0,5),1);
-    Renderer renderer(canvas,camera);
+    Scene scene;
+    Renderer renderer(canvas,camera,scene);
     OBJLoader loader;
-    renderer.addObject(&sphere);
+    AmbientLight alight(glm::vec3(0.6f,0.6f,0.8f));
+    DirectionalLight dlight(glm::vec3(1.0f,0.5f,0.6f),glm::vec3(-1.0f,-1.0f,1.0f));
+    PointLight plight(glm::vec3(0.8f,0.4f,1.0f),cameraRay.getOrigin() + glm::vec3(0.0f,0.4f,0.0f));
+    renderer.getScene().addLight(&alight);
+    renderer.getScene().addLight(&dlight);
+    renderer.getScene().addLight(&plight);
 
-    //std::cout <<"loading objects into the renderer"<<std::endl;
-    //loader.load("data/bunny.obj",color_t(255,255,255,255),renderer.getObjects());
-    //std::cout <<"LOADED:"<<renderer.getObjects().size()<<std::endl;
+    //Sphere sphere(color_t(0,0,255,255),glm::vec3(0,0,5),1);
+    //renderer.getScene().addObject(&sphere);
+
+    std::cout <<"loading objects into the renderer"<<std::endl;
+    loader.load("data/bunny.obj",color_t(255,255,255,255),renderer.getScene());
+    std::cout <<"LOADED:"<<renderer.getScene().getObjects().size()<<std::endl;
     std::cout <<"Rendering scene"<<std::endl;
     renderer.render();
 

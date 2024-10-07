@@ -22,6 +22,7 @@ FetchContent_Declare(
 
 # Add the stb_image_write header-only library
 include_directories(include)
+include_directories(src)
 
 # Make GLM available
 FetchContent_MakeAvailable(glm)
@@ -29,7 +30,7 @@ add_definitions(-DGLM_ENABLE_EXPERIMENTAL)
 
 
 # Automatically find all .cpp files in the src directory
-file(GLOB_RECURSE SOURCES "src/*.cpp")
+file(GLOB_RECURSE SOURCES "src/**.cpp")
 
 # Add the executable
 add_executable(rayTracer ${SOURCES})

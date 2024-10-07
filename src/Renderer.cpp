@@ -1,12 +1,7 @@
-#include "Renderer.hpp"
+#include <Renderer.hpp>
 // Constructor that takes a Canvas and Camera
-Renderer::Renderer(const Canvas& canvas, const Camera& camera)
-    : canvas(canvas), camera(camera) {}
-
-// Method to add an object to the renderer
-void Renderer::addObject(Object* object) {
-    objects.push_back(object);
-}
+Renderer::Renderer(const Canvas& canvas, const Camera& camera, const Scene& scene)
+    : canvas(canvas), camera(camera),scene(scene) {}
 
 // Method to render the scene
 void Renderer::render() {
@@ -22,11 +17,17 @@ void Renderer::render() {
             color_t pixelColor(0,0,0,0); 
 
             // Check for intersections with each object
-            for (const auto& object : objects) {
+            for (const auto& object : scene.getObjects()) {
                 auto hitDistance = object->testRayHit(ray);
                 if (hitDistance.value_or(0.0f)>camera.getDistance()) {
-                    // Example: Set the pixel color based on the object's color
-                    pixelColor = object->getColor();
+                    glm::vec3 point = ray.getPointAt(hitDistance.value());
+                    glm::vec3 intensity(0.0f);
+                    for (const auto& light : scene.getLights()) {
+                        intensity += light->getIlluminationAt(point,object->getNormalAt(point));
+                    }
+                    
+                    pixelColor = object->getColorAt(point) * intensity;
+
                     break; // Stop after the first hit
                 }
             }
@@ -35,4 +36,32 @@ void Renderer::render() {
             canvas.setPixel(x, y, pixelColor); // Assuming setPixel exists
         }
     }
+}
+
+// Getter for Canvas
+const Canvas& Renderer::getCanvas() const {
+    return canvas;
+}
+
+// Setter for Canvas
+void Renderer::setCanvas(const Canvas& newCanvas) {
+    canvas = newCanvas;
+}
+
+// Getter for Camera
+const Camera& Renderer::getCamera() const {
+    return camera;
+}
+
+// Setter for Camera
+void Renderer::setCamera(const Camera& newCamera) {
+    camera = newCamera;
+}
+
+Scene& Renderer::getScene() {
+    return scene;
+}
+
+void Renderer::setScene(const Scene& newScene){
+    scene = newScene;
 }

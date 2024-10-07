@@ -1,6 +1,8 @@
 #include "Triangle.hpp"
-Triangle::Triangle(const color_t& color,const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2)
-        :Object(color), vertex0(v0), vertex1(v1), vertex2(v2) {}
+Triangle::Triangle(const material_t& mat,const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2)
+        :Object(mat), vertex0(v0), vertex1(v1), vertex2(v2) {
+            normal = glm::normalize(glm::cross(v1 - v0, v2 - v0));  // Precompute the normal
+        }
 
 std::optional<float> Triangle::testRayHit(const Ray& ray) const {
     glm::vec3 origin = ray.getOrigin(), direction = ray.getDirection();
@@ -46,3 +48,8 @@ std::optional<float> Triangle::testRayHit(const Ray& ray) const {
     }
 }
 
+
+// Get the normal vector at any point on the triangle surface
+glm::vec3 Triangle::getNormalAt(const glm::vec3& point) const {
+    return normal;
+}

@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 #include <glm/glm.hpp>
-#include "Color.hpp"
+#include <Color.hpp>
 
 
 class Canvas {
