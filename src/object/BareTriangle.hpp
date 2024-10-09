@@ -12,10 +12,7 @@ class BareTriangle {
  public:
   BareTriangle(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2);
   // BareTriangle(const BareTriangle& triangle);
-  ~BareTriangle() {
-    static long long count = 0;
-    std::cout << "DELETING BARE TRIANGLE " << count++ << std::endl;
-  }
+  ~BareTriangle() {}
 
   std::optional<float> testRayHit(const Ray& ray) const;
 

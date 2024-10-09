@@ -69,21 +69,23 @@ GridCellIterator<T>& GridCellIterator<T>::operator++(int) {
   auto next = getNextCellAlongRay();
   if (grid->isInside(next))
     currentCell = next;
-  else
+  else {
     grid = nullptr;
+    currentCell = glm::ivec3(0);
+  }
   return *this;
 }
 
 template <typename T>
 std::vector<T>& GridCellIterator<T>::operator*() {
   assert(grid);
-  return grid->operator()(currentCell);
+  return grid->operator()(currentCell.x, currentCell.y, currentCell.z);
 }
 
 template <typename T>
 std::vector<T>* GridCellIterator<T>::operator->() {
   assert(grid);
-  return &(grid->operator()(currentCell));
+  return &(grid->operator()(currentCell.x, currentCell.y, currentCell.z));
 }
 
 // Comparison operators for iterator (used in range-based loops)

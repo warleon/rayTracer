@@ -13,7 +13,7 @@ class Mesh : public Object {
 
  public:
   Mesh(material_t mat);
-  ~Mesh() { std::cout << "DELETING MESH" << std::endl; }
+  ~Mesh() {}
   // void setTriangles(std::vector<BareTriangle>&& newTriangles);
   std::vector<std::shared_ptr<BareTriangle>>& getTriangles();
   void initGrid();

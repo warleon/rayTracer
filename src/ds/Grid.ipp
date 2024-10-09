@@ -53,10 +53,6 @@ inline void Grid<T>::reset(const glm::vec3& min, const glm::vec3& max,
   data.resize(resolution.x,
               std::vector<std::vector<bucket_t>>(
                   resolution.y, std::vector<bucket_t>(resolution.z)));
-
-  std::cout << "Grid initialized with size: " << resolution.x << " * "
-            << resolution.y << " * " << resolution.z << " = " << data.size()
-            << std::endl;
 }
 
 // Function to convert a point in world space to grid coordinates
