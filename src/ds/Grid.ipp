@@ -6,7 +6,10 @@
 template <typename T>
 Grid<T>::Grid(const glm::vec3& minCorner, const glm::vec3& maxCorner,
               const glm::ivec3& resolution)
-    : minCorner(minCorner), maxCorner(maxCorner), resolution(resolution) {
+    : minCorner(minCorner),
+      maxCorner(maxCorner),
+      resolution(resolution),
+      data(1) {
   data.resize(resolution.x * resolution.y * resolution.z);
 }
 
@@ -54,7 +57,9 @@ inline void Grid<T>::reset(const glm::vec3& min, const glm::vec3& max,
     vec.reserve(1);
   }
 
-  std::cout << "Grid initialized with size: " << data.size() << std::endl;
+  std::cout << "Grid initialized with size: " << resolution.x << " * "
+            << resolution.y << " * " << resolution.z << " = " << data.size()
+            << std::endl;
 }
 
 // Function to convert a point in world space to grid coordinates
@@ -86,17 +91,11 @@ std::vector<T>& Grid<T>::operator()(const glm::vec3& point) {
 
 template <typename T>
 std::vector<T>& Grid<T>::operator()(const glm::ivec3& gridPos) {
-  if (gridPos.x < 0 || gridPos.y < 0 || gridPos.z < 0 ||
-      gridPos.x >= resolution.x || gridPos.y >= resolution.y ||
-      gridPos.z >= resolution.z) {
-    std::cerr << "Grid position out of bounds: " << gridPos.x << ", "
-              << gridPos.y << ", " << gridPos.z << std::endl;
-    throw std::out_of_range("Grid index out of bounds");
-  }
   size_t index = gridPos.z * resolution.y * resolution.x +
                  gridPos.y * resolution.x + gridPos.x;
   std::cout << "Grid access to index " << index << " of " << data.size()
-            << std::endl;
+            << " address = " << &data[index]
+            << " content size= " << data[index].size() << std::endl;
   return data[index];
 }
 
