@@ -8,9 +8,11 @@
 
 template <typename T>
 class Grid {
-  glm::vec3 minCorner, maxCorner;    // Grid corners (world space)
-  glm::ivec3 resolution;             // Resolution in x, y, z (number of cells)
-  std::vector<std::vector<T>> data;  // 1D array storing grid cell data
+  typedef std::vector<T> bucket_t;
+  glm::vec3 minCorner, maxCorner;  // Grid corners (world space)
+  glm::ivec3 resolution;           // Resolution in x, y, z (number of cells)
+  std::vector<std::vector<std::vector<bucket_t>>>
+      data;  // 1D array storing grid cell data
 
   // Setters
   void setMinCorner(const glm::vec3& corner);
@@ -39,10 +41,10 @@ class Grid {
   glm::vec3 getCellSize() const;
 
   // Function to access grid cell data by 3D grid position
-  std::vector<T>& operator()(const glm::ivec3& gridPos);
-  std::vector<T>& operator()(const glm::vec3& point);
-  const std::vector<T>& operator()(const glm::ivec3& gridPos) const;
-  const std::vector<T>& operator()(const glm::vec3& point) const;
+  bucket_t& operator()(int x, int y, int z);
+  bucket_t& operator()(const glm::vec3& point);
+  const bucket_t& operator()(int x, int y, int z) const;
+  const bucket_t& operator()(const glm::vec3& point) const;
 
   // Begin iterator (initialize with ray and grid)
   GridCellIterator<T> begin(const Ray& ray) const;

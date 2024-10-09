@@ -14,7 +14,7 @@ std::vector<std::shared_ptr<BareTriangle>>& Mesh::getTriangles() {
 
 void Mesh::initGrid() {
   glm::vec3 minCorner(std::numeric_limits<float>::max()),
-      maxCorner(std::numeric_limits<float>::min()), diff;
+      maxCorner(std::numeric_limits<float>::min()), diff(0.0f);
   for (auto& triangle : triangles) {
     glm::vec3 minBox(std::numeric_limits<float>::max()),
         maxBox(std::numeric_limits<float>::min());
@@ -24,7 +24,9 @@ void Mesh::initGrid() {
       minBox = glm::min(minBox, vertex);
       maxBox = glm::max(maxBox, vertex);
     }
-    diff = (diff + maxBox - minBox) / 2.0f;
+    diff = diff.x == diff.y == diff.z == 0.0f
+               ? (maxBox - minBox)
+               : ((diff + maxBox - minBox) / 2.0f);
   }
   glm::ivec3 res = (maxCorner - minCorner) / (diff);
   grid.reset(minCorner, maxCorner, res);

@@ -6,11 +6,10 @@
 template <typename T>
 Grid<T>::Grid(const glm::vec3& minCorner, const glm::vec3& maxCorner,
               const glm::ivec3& resolution)
-    : minCorner(minCorner),
-      maxCorner(maxCorner),
-      resolution(resolution),
-      data(1) {
-  data.resize(resolution.x * resolution.y * resolution.z);
+    : minCorner(minCorner), maxCorner(maxCorner), resolution(resolution) {
+  data.resize(resolution.x,
+              std::vector<std::vector<bucket_t>>(
+                  resolution.y, std::vector<bucket_t>(resolution.z)));
 }
 
 template <typename T>
@@ -50,12 +49,10 @@ inline void Grid<T>::reset(const glm::vec3& min, const glm::vec3& max,
   setMinCorner(min);
   setMaxCorner(max);
   setResolution(res);
-  data =
-      std::vector<std::vector<T>>(resolution.x * resolution.y * resolution.z);
 
-  for (auto& vec : data) {
-    vec.reserve(1);
-  }
+  data.resize(resolution.x,
+              std::vector<std::vector<bucket_t>>(
+                  resolution.y, std::vector<bucket_t>(resolution.z)));
 
   std::cout << "Grid initialized with size: " << resolution.x << " * "
             << resolution.y << " * " << resolution.z << " = " << data.size()
@@ -85,30 +82,27 @@ glm::vec3 Grid<T>::getCellSize() const {
 
 // Function to access grid cell data by 3D grid position
 template <typename T>
-std::vector<T>& Grid<T>::operator()(const glm::vec3& point) {
-  return data[worldToGrid(point)];
+typename Grid<T>::bucket_t& Grid<T>::operator()(const glm::vec3& point) {
+  glm::ivec3 index = worldToGrid(point);
+  return this->operator()(index.x, index.y, index.z);
 }
 
 template <typename T>
-std::vector<T>& Grid<T>::operator()(const glm::ivec3& gridPos) {
-  size_t index = gridPos.z * resolution.y * resolution.x +
-                 gridPos.y * resolution.x + gridPos.x;
-  std::cout << "Grid access to index " << index << " of " << data.size()
-            << " address = " << &data[index]
-            << " content size= " << data[index].size() << std::endl;
-  return data[index];
+typename Grid<T>::bucket_t& Grid<T>::operator()(int x, int y, int z) {
+  return data[x][y][z];
 }
 
 // Function to access grid cell data by 3D grid position
 template <typename T>
-const std::vector<T>& Grid<T>::operator()(const glm::vec3& point) const {
-  return data[worldToGrid(point)];
+const typename Grid<T>::bucket_t& Grid<T>::operator()(
+    const glm::vec3& point) const {
+  return this->operator()(worldToGrid(point));
 }
 
 template <typename T>
-const std::vector<T>& Grid<T>::operator()(const glm::ivec3& gridPos) const {
-  return data[gridPos.z * resolution.y * resolution.x +
-              gridPos.y * resolution.x + gridPos.x];
+const typename Grid<T>::bucket_t& Grid<T>::operator()(int x, int y,
+                                                      int z) const {
+  return data[x][y][z];
 }
 
 // Begin iterator (initialize with ray and grid)
