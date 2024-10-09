@@ -49,7 +49,7 @@ void Mesh::addTriangleToGrid(std::shared_ptr<BareTriangle>& t) {
   for (int x = startIndex.x; x <= endIndex.x; ++x) {
     for (int y = startIndex.y; y <= endIndex.y; ++y) {
       for (int z = startIndex.z; z <= endIndex.z; ++z) {
-        grid(glm::ivec3(x, y, z)).emplace_back(t);
+        grid(x, y, z).emplace_back(t);
       }
     }
   }

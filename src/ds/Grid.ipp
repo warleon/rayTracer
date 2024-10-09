@@ -80,7 +80,7 @@ glm::vec3 Grid<T>::getCellSize() const {
 template <typename T>
 typename Grid<T>::bucket_t& Grid<T>::operator()(const glm::vec3& point) {
   glm::ivec3 index = worldToGrid(point);
-  return this->operator()(index.x, index.y, index.z);
+  return data[index.x][index.y][index.z];
 }
 
 template <typename T>
@@ -92,7 +92,8 @@ typename Grid<T>::bucket_t& Grid<T>::operator()(int x, int y, int z) {
 template <typename T>
 const typename Grid<T>::bucket_t& Grid<T>::operator()(
     const glm::vec3& point) const {
-  return this->operator()(worldToGrid(point));
+  glm::ivec3 index = worldToGrid(point);
+  return data[index.x][index.y][index.z];
 }
 
 template <typename T>
